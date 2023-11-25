@@ -1,4 +1,4 @@
-package main
+package pool_party
 
 import (
 	"github.com/we-are-discussing-rest/pool-party/internal"
