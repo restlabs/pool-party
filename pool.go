@@ -22,13 +22,14 @@ import (
 //   - shutdown: A channel used to signal the pool to shut down gracefully.
 //   - ready: A WaitGroup to track the readiness of the workers.
 type Pool struct {
-	workers   []*internal.Worker
-	count     int
-	taskId    atomic.Uint64
-	taskQueue chan internal.Task
-	workerWg  sync.WaitGroup
-	shutdown  chan bool
-	ready     sync.WaitGroup
+	workers   []*internal.Worker // workers represents a pool of workers
+	count     int                // count is the amount of workers to spawn
+	taskId    atomic.Uint64      // taskId is an atomic counter to generic unique task IDs
+	taskQueue chan internal.Task // taskQueue is a channel for submitting tasks to be processed by the workers
+	workerWg  sync.WaitGroup     // A WaitGroup to track the active workers in the pool.
+	shutdown  chan bool          // A channel used to signal the pool to shut down gracefully.
+	ready     sync.WaitGroup     // A WaitGroup to track the readiness of the workers.
+
 }
 
 // NewPool creates a new concurrent worker pool with the specified number of workers.
@@ -76,7 +77,7 @@ func (p *Pool) Start() {
 	}()
 }
 
-// Submit adds a new task to the pool for concurrent execution by available workers.
+// Send adds a new task to the pool for concurrent execution by available workers.
 //
 // The method takes a task function and wraps it in an internal.Task structure with
 // a unique ID generated from the pool's atomic counter. The task is then submitted
@@ -87,7 +88,7 @@ func (p *Pool) Start() {
 //
 // Parameters:
 //   - task: The function representing the task to be executed by a worker.
-func (p *Pool) Submit(task func()) {
+func (p *Pool) Send(task func()) {
 	// Create a new task with a unique ID and the provided task function.
 	t := internal.Task{
 		ID:  p.taskId.Add(1),
