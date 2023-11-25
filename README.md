@@ -1,5 +1,7 @@
 # Pool Party
-Dead simple worker pools in Go
+[![Go Reference](https://pkg.go.dev/badge/github.com/we-are-discussing-rest/pool-party.svg)](https://pkg.go.dev/github.com/we-are-discussing-rest/pool-party)
+
+Super simple worker pools in Go
 
 ## Usage
 Add the package
