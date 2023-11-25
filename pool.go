@@ -118,7 +118,6 @@ func (p *Pool) Stop() {
 	p.ready.Wait()
 	// Close the shutdown channel to signal to workers that no more tasks will be submitted.
 	close(p.shutdown)
-
 	// Stop each worker to ensure they complete ongoing tasks and terminate gracefully.
 	for _, worker := range p.workers {
 		worker.Stop()
