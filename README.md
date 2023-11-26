@@ -17,12 +17,13 @@ import (
 
 func main() {
     p := poolparty.NewPool(5) // Creates a new worker pool with 5 workers
-
+    
     // Note: this library only currently supports sending a function with no params
     p.Send(func() {
         time.Sleep(30 * time.Seconds)
     }) // Sends a new task to the worker pool 
 
+    p.Start() // Starts all the workers in the pool
 
     p.Stop() // Gracefully stops the workers 
 }
