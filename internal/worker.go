@@ -26,6 +26,7 @@ func NewWorker(id uint64, task chan Task) *Worker {
 
 func (w *Worker) Start(wg *sync.WaitGroup, swg *sync.WaitGroup) {
 	go func() {
+		defer wg.Done()
 		fmt.Printf("starting worker %d\n", w.ID)
 
 		for {
@@ -33,13 +34,13 @@ func (w *Worker) Start(wg *sync.WaitGroup, swg *sync.WaitGroup) {
 			case task, ok := <-w.Task:
 				swg.Add(1)
 				if !ok {
+					swg.Done()
 					return
 				}
 
 				fmt.Printf("Worker ID %d, execution Task ID %d\n", w.ID, task.ID)
 				task.Job()
 
-				wg.Done()
 				swg.Done()
 			case <-w.Quit:
 				return
